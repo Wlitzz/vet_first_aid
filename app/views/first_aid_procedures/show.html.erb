@@ -1,0 +1,63 @@
+<% content_for :title, @procedure.name %>
+
+<div class="max-w-3xl mx-auto">
+  <%# Breadcrumb %>
+  <nav class="text-sm text-gray-500 mb-6">
+    <%= link_to "Triage", triage_path, class: "hover:text-blue-600" %>
+    <span class="mx-2">›</span>
+    <span class="text-gray-800 font-medium"><%= @procedure.name %></span>
+  </nav>
+
+  <%# Header %>
+  <div class="flex flex-wrap items-start gap-3 mb-4">
+    <h1 class="text-3xl font-extrabold text-gray-900 flex-1"><%= @procedure.name %></h1>
+    <span class="inline-block px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wide
+      <%= @procedure.severity == 'immediate' ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-yellow-100 text-yellow-700 border border-yellow-300' %>">
+      <%= @procedure.severity_label %>
+    </span>
+  </div>
+
+  <p class="text-gray-600 mb-6 leading-relaxed"><%= @procedure.description %></p>
+
+  <%# Procedure-level videos %>
+  <% if @procedure_videos.any? %>
+    <div class="mb-8 space-y-4">
+      <% @procedure_videos.each do |video| %>
+        <div>
+          <p class="text-sm font-semibold text-gray-700 mb-2"><%= video.title %></p>
+          <% if video.embed_url %>
+            <div class="aspect-video rounded-lg overflow-hidden bg-black">
+              <iframe src="<%= video.embed_url %>" class="w-full h-full" allowfullscreen
+                title="<%= video.title %>"></iframe>
+            </div>
+          <% else %>
+            <%= link_to "▶ Watch: #{video.title}", video.url, target: "_blank",
+              class: "text-blue-600 hover:text-blue-800 underline text-sm" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Step overview + Start button %>
+  <% if @steps.any? %>
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">Steps Overview</h2>
+      <ol class="space-y-2 mb-6">
+        <% @steps.each do |step| %>
+          <li class="flex gap-3 text-sm text-gray-700">
+            <span class="shrink-0 w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold"><%= step.position %></span>
+            <span><%= step.instruction.truncate(100) %></span>
+          </li>
+        <% end %>
+      </ol>
+      <%= link_to "Start Step-by-Step Guide →",
+        first_aid_procedure_step_path(@procedure, @steps.first),
+        class: "inline-block bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors" %>
+    </div>
+  <% else %>
+    <p class="text-gray-500">No steps have been added to this guide yet.</p>
+  <% end %>
+
+  <%= link_to "← Back to Triage", triage_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+</div>

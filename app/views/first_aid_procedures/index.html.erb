@@ -1,0 +1,73 @@
+<% content_for :title, "Emergency Triage" %>
+
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Emergency Triage</h1>
+  <p class="text-gray-500 mb-8">Select your pet's species and describe the emergency to find the right first-aid guide.</p>
+
+  <%= form_with url: triage_path, method: :get, local: true do |f| %>
+    <%# Species selector %>
+    <div class="mb-6">
+      <p class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">1. Select your pet</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <% [["dog", "🐶", "Dog"], ["cat", "🐱", "Cat"], ["rabbit", "🐰", "Rabbit"], ["hamster", "🐹", "Hamster"]].each do |value, emoji, label| %>
+          <% species_class = @species == value ? "border-blue-600 bg-blue-50 text-blue-700 font-bold" : "border-gray-200 bg-white text-gray-700 hover:border-blue-400 hover:bg-blue-50" %>
+          <%= link_to triage_path(species: value, query: @query.presence),
+            class: "flex flex-col items-center justify-center py-5 px-3 rounded-xl border-2 text-center transition-all #{species_class}" do %>
+            <span class="text-4xl mb-1"><%= emoji %></span>
+            <span class="text-sm font-medium"><%= label %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Symptom search %>
+    <div class="mb-6">
+      <p class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">2. Describe the emergency</p>
+      <div class="flex gap-2">
+        <% if @species.present? %>
+          <input type="hidden" name="species" value="<%= @species %>">
+        <% end %>
+        <%= f.text_field :query, value: @query, placeholder: "e.g. choking, bleeding, not breathing...",
+          class: "flex-1 border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        <%= f.submit "Search", class: "bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg text-sm cursor-pointer transition-colors" %>
+      </div>
+    </div>
+
+    <%# Validation message %>
+    <% if @searched && !@has_filters %>
+      <p class="text-red-600 text-sm mb-4">Please select a species or enter a symptom to search.</p>
+    <% end %>
+  <% end %>
+
+  <%# Results %>
+  <% if @searched %>
+    <div class="mt-6">
+      <% if @procedures.any? %>
+        <p class="text-sm text-gray-500 mb-4">Found <%= @procedures.count %> guide<%= @procedures.count == 1 ? "" : "s" %><%= " for #{@species.capitalize}" if @species.present? %>.</p>
+        <div class="space-y-4">
+          <% @procedures.each do |procedure| %>
+            <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h2 class="text-lg font-bold text-gray-900"><%= procedure.name %></h2>
+                  <p class="text-gray-600 text-sm mt-1 line-clamp-2"><%= procedure.description %></p>
+                </div>
+                <span class="shrink-0 inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide
+                  <%= procedure.severity == 'immediate' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' %>">
+                  <%= procedure.severity_label %>
+                </span>
+              </div>
+              <%= link_to "View Guide →", first_aid_procedure_path(procedure),
+                class: "inline-block mt-4 text-blue-600 hover:text-blue-800 text-sm font-semibold" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-12 text-gray-500">
+          <p class="text-lg font-medium">No guides found.</p>
+          <p class="text-sm mt-1">Try a different species or symptom, or contact your nearest vet clinic immediately.</p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

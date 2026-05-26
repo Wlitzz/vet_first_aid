@@ -53,9 +53,10 @@
 
       <div id="mobile-menu" class="hidden absolute w-full bg-blue-800 shadow-xl border-t border-blue-600">
         <div class="px-4 pt-2 pb-4 space-y-2 sm:px-6 max-w-7xl mx-auto">
-          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Emergency Triage</a>
-          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Training Quiz</a>
-          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Find a Clinic</a>
+          <%= link_to "Emergency Triage", triage_path, class: "block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors" %>
+          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors opacity-60">Training Quiz <span class="text-xs">(coming soon)</span></a>
+          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors opacity-60">Find a Clinic <span class="text-xs">(coming soon)</span></a>
+          <%= link_to "Admin", admin_root_path, class: "block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors" %>
         </div>
       </div>
     </nav>
