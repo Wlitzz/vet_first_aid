@@ -1,0 +1,174 @@
+<%# =============================================================================
+  # show.html.erb
+  # SWE30003 – Group 17 | Clinic Locator Lead
+  #
+  # Detail card for a single VeterinaryClinic.
+  # Instance variables from ClinicsController#show:
+  #   @clinic  – VeterinaryClinic
+  # =============================================================================
+  %>
+<% content_for :title, "#{@clinic.name} – Vet First Aid" %>
+
+<div class="clinic-show">
+
+  <%# ── Back navigation ─────────────────────────────────────────────── %>
+  <nav class="clinic-show__breadcrumb" aria-label="Breadcrumb">
+    <%= link_to clinics_path(
+          lat: params[:lat], lng: params[:lng],
+          species: params[:species],
+          open_now: params[:open_now],
+          emergency_24_7: params[:emergency_24_7]),
+          class: "back-link" do %>
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0Z"/>
+      </svg>
+      Back to results
+    <% end %>
+  </nav>
+
+  <%# ── Hero header ──────────────────────────────────────────────────── %>
+  <header class="clinic-show__header <%= 'clinic-show__header--emergency' if @clinic.emergency_24_7 %>">
+    <div class="clinic-show__header-inner">
+
+      <div class="clinic-show__badges">
+        <% if @clinic.emergency_24_7 %>
+          <span class="badge badge--emergency badge--lg">
+            <svg class="badge__icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm.75 3.5v4a.75.75 0 0 1-1.5 0v-4a.75.75 0 0 1 1.5 0Zm-.75 6.5a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75Z"/>
+            </svg>
+            24 / 7 Emergency
+          </span>
+        <% end %>
+        <% if @clinic.open_now? %>
+          <span class="badge badge--open badge--lg"><span class="badge__dot"></span>Open Now</span>
+        <% else %>
+          <span class="badge badge--closed badge--lg"><span class="badge__dot"></span>Closed</span>
+        <% end %>
+        <% if @clinic.stale? %>
+          <span class="badge badge--stale badge--lg">&#9888; Info may be outdated</span>
+        <% end %>
+      </div>
+
+      <h1 class="clinic-show__name"><%= @clinic.name %></h1>
+      <p class="clinic-show__address">
+        <svg class="inline-icon" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 1a5 5 0 0 0-5 5c0 3.4 4.4 8.4 4.6 8.6a.5.5 0 0 0 .8 0C8.6 14.4 13 9.4 13 6a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/>
+        </svg>
+        <%= @clinic.address %>
+      </p>
+
+    </div>
+  </header>
+
+  <%# ── Body grid ────────────────────────────────────────────────────── %>
+  <div class="clinic-show__grid">
+
+    <%# Left column: core info ──────────────────────────────────────── %>
+    <section class="info-panel">
+
+      <%# Contact ─────────────────────────────────── %>
+      <div class="info-panel__block">
+        <h3 class="info-panel__heading">Contact</h3>
+
+        <% if @clinic.phone.present? %>
+          <div class="info-row">
+            <svg class="info-row__icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122L9.82 10.84a1.49 1.49 0 0 1-1.354-.36l-3.062-3.063a1.49 1.49 0 0 1-.36-1.354l.651-2.965a.678.678 0 0 0-.122-.58L3.654 1.328Z"/>
+            </svg>
+            <%= link_to @clinic.phone, "tel:#{@clinic.phone}", class: "info-link info-link--call" %>
+          </div>
+        <% end %>
+
+        <% if @clinic.email.present? %>
+          <div class="info-row">
+            <svg class="info-row__icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+            </svg>
+            <%= link_to @clinic.email, "mailto:#{@clinic.email}", class: "info-link" %>
+          </div>
+        <% end %>
+
+        <% if @clinic.website.present? %>
+          <div class="info-row">
+            <svg class="info-row__icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077ZM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09Zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49ZM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847ZM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5ZM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51Zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5ZM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145Zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472ZM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82Zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933ZM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5Zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5Zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49ZM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933ZM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355Z"/>
+            </svg>
+            <%= link_to @clinic.website, @clinic.website, target: "_blank", rel: "noopener noreferrer", class: "info-link" %>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Species accepted ─────────────────────────── %>
+      <% if @clinic.species_accepted.any? %>
+        <div class="info-panel__block">
+          <h3 class="info-panel__heading">Accepts</h3>
+          <div class="species-list">
+            <% @clinic.species_accepted.each do |sp| %>
+              <span class="species-tag species-tag--lg"><%= sp %></span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Last verified ─────────────────────────────── %>
+      <div class="info-panel__block">
+        <h3 class="info-panel__heading">Data Freshness</h3>
+        <p class="info-panel__note">
+          Last verified: <strong><%= @clinic.last_verified_at&.strftime("%d %b %Y") || "Unknown" %></strong>
+          <% if @clinic.stale? %>
+            <span class="stale-warning">— data may be outdated</span>
+          <% end %>
+        </p>
+      </div>
+
+    </section>
+
+    <%# Right column: hours table + CTA ─────────────────────────────── %>
+    <section class="hours-panel">
+
+      <h3 class="info-panel__heading">Opening Hours</h3>
+
+      <% if @clinic.emergency_24_7 %>
+        <p class="hours-panel__emergency-note">This clinic operates 24 hours, 7 days a week.</p>
+      <% else %>
+        <table class="hours-table" aria-label="Opening hours">
+          <tbody>
+            <% %w[Mon Tue Wed Thu Fri Sat Sun].each do |day| %>
+              <%
+                hours    = @clinic.opening_hours[day] || "Closed"
+                is_today = VeterinaryClinic::DAY_ABBREVIATIONS[Date.today.wday] == day
+              %>
+              <tr class="hours-row <%= 'hours-row--today' if is_today %> <%= 'hours-row--closed' if hours.downcase == 'closed' %>">
+                <td class="hours-row__day"><%= day %><%= " (today)" if is_today %></td>
+                <td class="hours-row__time"><%= hours %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+      <%# CTA buttons ──────────────────────────────── %>
+      <div class="clinic-show__cta">
+        <% if @clinic.phone.present? %>
+          <%= link_to "tel:#{@clinic.phone}", class: "cta-btn cta-btn--call" do %>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122L9.82 10.84a1.49 1.49 0 0 1-1.354-.36l-3.062-3.063a1.49 1.49 0 0 1-.36-1.354l.651-2.965a.678.678 0 0 0-.122-.58L3.654 1.328Z"/>
+            </svg>
+            Call Now
+          <% end %>
+        <% end %>
+
+        <%= link_to "https://maps.google.com/?q=#{CGI.escape(@clinic.address)}",
+              target: "_blank", rel: "noopener noreferrer",
+              class: "cta-btn cta-btn--navigate" do %>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 1a5 5 0 0 0-5 5c0 3.4 4.4 8.4 4.6 8.6a.5.5 0 0 0 .8 0C8.6 14.4 13 9.4 13 6a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/>
+          </svg>
+          Open in Maps
+        <% end %>
+      </div>
+
+    </section>
+
+  </div>
+</div>

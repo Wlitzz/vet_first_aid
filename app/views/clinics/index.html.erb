@@ -1,0 +1,164 @@
+<%# =============================================================================
+  # index.html.erb  (clinics#index + clinics#search)
+  # SWE30003 – Group 17 | Clinic Locator Lead
+  #
+  # Renders:
+  #   1. Sticky search / filter bar (lat, lng, species, open_now, emergency)
+  #   2. Result list via _clinic_card partial
+  #   3. Helpline fallback when no clinics found after radius expansion
+  #
+  # Instance variables (set by ClinicsController):
+  #   @clinics          – Array<VeterinaryClinic>  (may be empty or nil)
+  #   @lat, @lng        – Float | nil
+  #   @radius_km        – Integer | nil
+  #   @show_helpline    – Boolean
+  #   @species_list     – Array<String>
+  #   @availability_filters – Array<String>
+  
+  # =============================================================================
+  %>
+
+<% content_for :title, "Find a Vet Clinic – Vet First Aid" %>
+
+<div class="clinic-locator">
+
+  <%# ── Hero header ──────────────────────────────────────────────────── %>
+  <header class="locator-hero">
+    <div class="locator-hero__inner">
+      <p class="locator-hero__eyebrow">Vet First Aid &mdash; Task 4</p>
+      <h1 class="locator-hero__title">Find a Nearby Vet Clinic</h1>
+      <p class="locator-hero__sub">Search by location &middot; Filter by availability &middot; Navigate instantly</p>
+    </div>
+  </header>
+
+  <%# ── Sticky search bar ─────────────────────────────────────────────── %>
+  <div class="search-bar">
+    <%= form_with url: clinics_path, method: :get,
+          data: { turbo: false },
+          class: "search-bar__form",
+          id: "clinic-search-form" do |f| %>
+
+      <%# Hidden lat/lng – populated by JS geolocation ─── %>
+      <%= hidden_field_tag :lat, @lat %>
+      <%= hidden_field_tag :lng, @lng %>
+
+      <div class="search-bar__field">
+        <%= label_tag :species, "Species", class: "search-bar__label" %>
+        <%= select_tag :species,
+              options_for_select([["All species", ""]] + @species_list.map { |s| [s, s] },
+                                 params[:species]),
+              class: "search-bar__input search-bar__input--narrow" %>
+      </div>
+
+      <div class="search-bar__checkboxes">
+        <label class="checkbox-label">
+          <%= check_box_tag :open_now, "1", params[:open_now] == "1" %>
+          Open now
+        </label>
+        <label class="checkbox-label">
+          <%= check_box_tag :emergency_24_7, "1", params[:emergency_24_7] == "1" %>
+          24 / 7 Emergency
+        </label>
+      </div>
+
+      <button type="submit" class="search-bar__submit" id="search-btn">
+        Search
+      </button>
+
+      <button type="button" class="search-bar__submit"
+              id="locate-btn"
+              style="background: #1d4ed8;"
+              title="Use my current location">
+        &#9678; Use My Location
+      </button>
+
+    <% end %>
+  </div>
+
+  <%# ── Flash messages ─────────────────────────────────────────────────── %>
+  <div class="results-area">
+    <% if flash[:alert].present? %>
+      <p class="flash-alert"><%= flash[:alert] %></p>
+    <% end %>
+
+    <%# ── Results meta ─────────────────────────────────────────────────── %>
+    <% if @clinics.present? %>
+      <p class="results-meta">
+        Showing <strong><%= @clinics.size %></strong>
+        clinic<%= @clinics.size == 1 ? "" : "s" %>
+        <% if @radius_km %>within <strong><%= @radius_km %> km</strong><% end %>
+        <% if @lat && @lng %>of your location<% end %>
+      </p>
+    <% end %>
+
+    <%# ── Clinic cards ──────────────────────────────────────────────────── %>
+    <% if @clinics&.any? %>
+      <% @clinics.each do |clinic| %>
+        <%= render partial: "clinic_card", locals: { clinic: clinic, lat: @lat, lng: @lng } %>
+      <% end %>
+
+    <% elsif @clinics&.empty? %>
+      <%# Only show no-results when a search was attempted (lat/lng present) %>
+      <div class="no-results">
+        <div class="no-results__icon">&#128269;</div>
+        <h3>No clinics found</h3>
+        <p>We searched up to 100 km but found nothing matching your filters.<br>Try removing a filter or checking back later.</p>
+
+        <% if @show_helpline %>
+          <div class="helpline-card">
+            <p class="helpline-card__title">&#128222; Emergency Veterinary Hotline</p>
+            <p style="font-size:.85rem; color:#555; margin:.25rem 0 .5rem;">
+              Contact the Veterinary Association directly for urgent help.
+            </p>
+            <a href="tel:+60123456789" class="helpline-card__number">+60 12-345 6789</a>
+          </div>
+        <% end %>
+      </div>
+
+    <% else %>
+      <%# Initial landing state – no search submitted yet %>
+      <div class="no-results" style="padding-top:4rem;">
+        <div class="no-results__icon">&#128205;</div>
+        <h3>Allow location to get started</h3>
+        <p>Click <strong>Use My Location</strong> or tap <strong>Search</strong> after entering your coordinates above.</p>
+      </div>
+    <% end %>
+
+  </div><%# /results-area %>
+
+</div><%# /clinic-locator %>
+
+<%# ── Geolocation script ──────────────────────────────────────────────────── %>
+<script>
+  (function () {
+    const locateBtn = document.getElementById('locate-btn');
+    const latInput  = document.querySelector('input[name="lat"]');
+    const lngInput  = document.querySelector('input[name="lng"]');
+    const form      = document.getElementById('clinic-search-form');
+
+    if (!locateBtn) return;
+
+    locateBtn.addEventListener('click', function () {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+      locateBtn.textContent = 'Locating…';
+      locateBtn.disabled = true;
+
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          latInput.value = pos.coords.latitude.toFixed(6);
+          lngInput.value = pos.coords.longitude.toFixed(6);
+          form.submit();
+        },
+        function (err) {
+          locateBtn.textContent = '⊕ Use My Location';
+          locateBtn.disabled = false;
+          alert('Could not get your location. Please check browser permissions.');
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    });
+  })();
+</script>

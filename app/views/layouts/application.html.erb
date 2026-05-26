@@ -19,7 +19,11 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "clinic", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -55,7 +59,7 @@
         <div class="px-4 pt-2 pb-4 space-y-2 sm:px-6 max-w-7xl mx-auto">
           <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Emergency Triage</a>
           <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Training Quiz</a>
-          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Find a Clinic</a>
+          <a href="/find-a-clinic" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Find a Clinic</a>
         </div>
       </div>
     </nav>
