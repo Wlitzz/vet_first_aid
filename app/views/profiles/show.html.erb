@@ -1,0 +1,110 @@
+<div class="max-w-6xl mx-auto space-y-8">
+
+  <div class="bg-white rounded-3xl shadow-xl border border-blue-100 p-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-2">My Profile</h1>
+    <p class="text-gray-500">Manage your account information and pet profiles.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <div class="bg-white rounded-3xl shadow-xl border border-blue-100 p-8">
+      <div class="w-24 h-24 rounded-full bg-blue-700 text-white flex items-center justify-center text-4xl font-bold mb-6">
+        <%= @account.first_name[0].upcase %>
+      </div>
+
+      <h2 class="text-2xl font-bold text-gray-900">
+        <%= @account.first_name %> <%= @account.last_name %>
+      </h2>
+
+      <p class="text-gray-500 mt-1">
+        <%= @account.email %>
+      </p>
+
+      <a href="/profile/edit"
+        class="mt-6 w-full block text-center bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-xl font-semibold">
+        Edit Profile
+      </a>
+    </div>
+
+    <div class="lg:col-span-2 bg-white rounded-3xl shadow-xl border border-blue-100 p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900">My Pets</h2>
+          <p class="text-gray-500">View and manage your registered pets.</p>
+        </div>
+
+        <a href="/pets/new" class="bg-blue-700 hover:bg-blue-800 text-white px-5 py-3 rounded-xl font-semibold">
+          + Add Pet
+        </a>
+      </div>
+
+      <% if @pets.any? %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <% @pets.each do |pet| %>
+
+            <div class="border border-blue-100 rounded-2xl p-6 shadow-sm">
+
+              <h3 class="text-xl font-bold text-gray-900">
+                <%= pet.name %>
+              </h3>
+
+              <p class="text-gray-500 mt-1">
+                <%= pet.species %>
+                <% if pet.breed.present? %>
+                  • <%= pet.breed %>
+                <% end %>
+              </p>
+
+              <div class="mt-4 text-sm text-gray-600 space-y-1">
+                <p>
+                  <strong>Date of Birth:</strong>
+                  <%= pet.date_of_birth.present? ? pet.date_of_birth.strftime("%d %b %Y") : "Not provided" %>
+                </p>
+
+                <p>
+                  <strong>Weight:</strong>
+                  <%= pet.weight.present? ? "#{pet.weight} kg" : "Not provided" %>
+                </p>
+
+                <p>
+                  <strong>Allergies:</strong>
+                  <%= pet.allergies.present? ? pet.allergies : "None" %>
+                </p>
+              </div>
+
+              <div class="mt-5 flex gap-3">
+                <a href="/pets/<%= pet.id %>" class="flex-1 text-center bg-blue-50 text-blue-700 py-2 rounded-lg font-semibold">
+                  View
+                </a>
+
+                <a href="/pets/<%= pet.id %>/edit" class="flex-1 text-center bg-gray-100 text-gray-700 py-2 rounded-lg font-semibold">
+                  Edit
+                </a>
+              </div>
+
+            </div>
+
+          <% end %>
+
+        </div>
+
+      <% else %>
+
+        <div class="border border-dashed border-blue-200 rounded-2xl p-10 text-center">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">No pets registered yet</h3>
+          <p class="text-gray-500 mb-6">Add your first pet profile to personalise first-aid guidance.</p>
+
+          <a href="/pets/new" class="inline-block bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-xl font-semibold">
+            + Add Your First Pet
+          </a>
+        </div>
+
+      <% end %>
+
+    </div>
+
+  </div>
+
+</div>

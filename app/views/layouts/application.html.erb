@@ -6,63 +6,114 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Vet First Aid">
     <meta name="mobile-web-app-capable" content="yes">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "clinic", "data-turbo-track": "reload" %>
+
     <%= javascript_importmap_tags %>
   </head>
 
-<body class="bg-gray-50 text-gray-900 font-sans antialiased relative">
-    
-    <nav class="bg-blue-700 shadow-md relative z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16 items-center">
-          
-          <div class="flex-shrink-0">
-            <a href="/" class="text-white font-bold text-xl tracking-wide">
-              Vet<span class="text-blue-200">FirstAid</span>
-            </a>
+  <body class="bg-gray-50 text-gray-900 font-sans antialiased relative">
+
+    <% unless controller_name == "sessions" || controller_name == "users" %>
+
+      <nav class="bg-blue-700 shadow-md relative z-50">
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div class="flex justify-between h-16 items-center">
+
+            <div class="flex-shrink-0">
+              <a href="/" class="text-white font-bold text-xl tracking-wide">
+                Vet<span class="text-blue-200">FirstAid</span>
+              </a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+
+              <button
+                onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
+                class="text-white hover:text-blue-200 focus:outline-none transition-colors"
+              >
+                <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+
+              <% if session[:account_id] %>
+
+                <a
+                  href="/profile"
+                  class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors border border-blue-500"
+                >
+                  My Profile
+                </a>
+
+                <%= button_to "Logout",
+                  "/logout",
+                  method: :delete,
+                  class: "bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-blue-400"
+                %>
+
+              <% else %>
+
+                <a
+                  href="/login"
+                  class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-blue-400"
+                >
+                  Login
+                </a>
+
+              <% end %>
+
+            </div>
+
           </div>
 
-          <div class="flex items-center space-x-4">
-            
-            <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-              <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-              </svg>
-            </button>
+        </div>
 
-            <a href="#" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-colors border border-blue-500">
-              My Profile
+        <div id="mobile-menu" class="hidden absolute w-full bg-blue-800 shadow-xl border-t border-blue-600">
+
+          <div class="px-4 pt-2 pb-4 space-y-2 sm:px-6 max-w-7xl mx-auto">
+
+            <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">
+              Emergency Triage
+            </a>
+
+            <a href="/quiz" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">
+              Training Quiz
+            </a>
+
+            <a href="/find-a-clinic" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">
+              Find a Clinic
             </a>
 
           </div>
-        </div>
-      </div>
 
-      <div id="mobile-menu" class="hidden absolute w-full bg-blue-800 shadow-xl border-t border-blue-600">
-        <div class="px-4 pt-2 pb-4 space-y-2 sm:px-6 max-w-7xl mx-auto">
-          <a href="#" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Emergency Triage</a>
-          <a href="/quiz" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Training Quiz</a>
-          <a href="/find-a-clinic" class="block px-3 py-3 rounded-md text-base font-medium text-white hover:bg-blue-600 transition-colors">Find a Clinic</a>
         </div>
-      </div>
-    </nav>
+
+      </nav>
+
+    <% end %>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <%= yield %>

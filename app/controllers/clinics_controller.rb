@@ -12,6 +12,8 @@
 # =============================================================================
 class ClinicsController < ApplicationController
 
+  skip_before_action :require_login
+
   # ---------------------------------------------------------------------------
   # GET /clinics
   # Renders the search landing page (location prompt + filter controls).

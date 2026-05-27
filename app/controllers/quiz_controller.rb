@@ -1,4 +1,7 @@
 class QuizController < ApplicationController
+
+  skip_before_action :require_login
+
   before_action :load_quiz, only: [ :show, :result ]
 
   def index
