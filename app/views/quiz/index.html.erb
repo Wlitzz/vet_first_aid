@@ -1,0 +1,23 @@
+<% content_for :title, "Training Quiz — Vet First Aid" %>
+
+<div class="py-6">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Training Quiz</h1>
+    <p class="mt-2 text-gray-500">Test your veterinary first aid knowledge. Choose a topic to begin.</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <% Quiz.topics.each do |key, topic| %>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col hover:shadow-md transition-shadow">
+        <div class="text-4xl mb-3"><%= topic[:icon] %></div>
+        <h2 class="text-lg font-semibold text-gray-900 mb-1"><%= topic[:title] %></h2>
+        <p class="text-sm text-gray-500 mb-4 flex-1"><%= topic[:description] %></p>
+        <div class="flex items-center justify-between">
+          <span class="text-xs text-gray-400"><%= topic[:questions].length %> questions</span>
+          <%= link_to "Start Quiz →", quiz_topic_path(topic: key),
+                class: "bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

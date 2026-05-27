@@ -1,6 +1,6 @@
 FirstAidProcedure.destroy_all
 
-# ─── DOG CHOKING ──────────────────────────────────────────────────────────────
+# --- DOG CHOKING ---
 dog_choke = FirstAidProcedure.create!(
   name: "Dog Choking",
   species: "dog",
@@ -17,8 +17,8 @@ Step.create!([
   },
   {
     first_aid_procedure: dog_choke, position: 2,
-    instruction: "Perform the modified Heimlich maneuver. For a standing dog: stand or kneel behind the dog, place your hands around the abdomen just below the ribcage, and give 3–5 firm upward-and-forward thrusts. For a small dog: hold them on your lap facing away from you and apply gentle firm thrusts.",
-    checklist: "Thrusts are applied below the ribcage, not on the ribcage\nApplying 3–5 firm but controlled compressions\nDo not apply excessive force on a small dog - this can cause internal injury\nIf unsure, contact an emergency vet clinic immediately"
+    instruction: "Perform the modified Heimlich maneuver. For a standing dog: stand or kneel behind the dog, place your hands around the abdomen just below the ribcage, and give 3-5 firm upward-and-forward thrusts. For a small dog: hold them on your lap facing away from you and apply gentle firm thrusts.",
+    checklist: "Thrusts are applied below the ribcage, not on the ribcage\nApplying 3-5 firm but controlled compressions\nDo not apply excessive force on a small dog - this can cause internal injury\nIf unsure, contact an emergency vet clinic immediately"
   },
   {
     first_aid_procedure: dog_choke, position: 3,
@@ -34,12 +34,12 @@ Step.create!([
 
 InstructionalVideo.create!(
   first_aid_procedure: dog_choke,
-  title: "How to Help a Choking Dog – Pet First Aid",
+  title: "How to Help a Choking Dog - Pet First Aid",
   url: "https://www.youtube.com/watch?v=NhYwzPJRqsk",
   description: "Demonstration of the modified Heimlich manoeuvre and choking response for dogs."
 )
 
-# ─── CAT BLEEDING WOUND ───────────────────────────────────────────────────────
+# --- CAT BLEEDING WOUND ---
 cat_bleed = FirstAidProcedure.create!(
   name: "Cat Bleeding Wound",
   species: "cat",
@@ -56,7 +56,7 @@ steps_cat = Step.create!([
   },
   {
     first_aid_procedure: cat_bleed, position: 2,
-    instruction: "Apply firm, direct pressure to the wound using a clean cloth, gauze pad, or sanitary pad. Press firmly and hold continuously for at least 3–5 minutes without lifting the cloth. If blood soaks through, add more material on top - do NOT remove the first layer.",
+    instruction: "Apply firm, direct pressure to the wound using a clean cloth, gauze pad, or sanitary pad. Press firmly and hold continuously for at least 3-5 minutes without lifting the cloth. If blood soaks through, add more material on top - do NOT remove the first layer.",
     checklist: "Pressure is being held continuously without releasing\nBlood is not soaking through rapidly (if it is, press harder)\nWound site is not on the neck or chest (seek emergency vet immediately if so)\nIf unsure, contact an emergency vet clinic immediately"
   },
   {
@@ -73,12 +73,12 @@ steps_cat = Step.create!([
 
 InstructionalVideo.create!(
   step: steps_cat[1],
-  title: "How to Stop Bleeding in Cats – Pet First Aid",
+  title: "How to Stop Bleeding in Cats - Pet First Aid",
   url: "https://www.youtube.com/watch?v=EfpNKRnWvAM",
   description: "Demonstration of direct pressure wound care for cats."
 )
 
-# ─── RABBIT GI STASIS ─────────────────────────────────────────────────────────
+# --- RABBIT GI STASIS ---
 rabbit_gi = FirstAidProcedure.create!(
   name: "Rabbit Not Eating (GI Stasis)",
   species: "rabbit",
@@ -100,12 +100,12 @@ Step.create!([
   },
   {
     first_aid_procedure: rabbit_gi, position: 3,
-    instruction: "Do NOT attempt to administer medication, oil, or home remedies without veterinary guidance - these can be harmful to rabbits. Keep the rabbit warm (18–24°C) as hypothermia worsens GI stasis. Contact a rabbit-savvy vet as soon as possible for proper diagnosis and treatment.",
-    checklist: "Rabbit has been kept warm and in a quiet, low-stress environment\nNo unprescribed medications or oils have been given\nA vet appointment has been booked - do not wait more than 12–24 hours from symptom onset\nIf unsure, contact an emergency vet clinic immediately"
+    instruction: "Do NOT attempt to administer medication, oil, or home remedies without veterinary guidance - these can be harmful to rabbits. Keep the rabbit warm (18-24 degrees C) as hypothermia worsens GI stasis. Contact a rabbit-savvy vet as soon as possible for proper diagnosis and treatment.",
+    checklist: "Rabbit has been kept warm and in a quiet, low-stress environment\nNo unprescribed medications or oils have been given\nA vet appointment has been booked - do not wait more than 12-24 hours from symptom onset\nIf unsure, contact an emergency vet clinic immediately"
   }
 ])
 
-# ─── HAMSTER SEIZURE ──────────────────────────────────────────────────────────
+# --- HAMSTER SEIZURE ---
 hamster_sz = FirstAidProcedure.create!(
   name: "Hamster Seizure",
   species: "hamster",
@@ -134,9 +134,37 @@ Step.create!([
 
 InstructionalVideo.create!(
   first_aid_procedure: hamster_sz,
-  title: "Hamster Seizures – What to Do",
+  title: "Hamster Seizures - What to Do",
   url: "https://www.youtube.com/watch?v=yD0fHvj3F8E",
   description: "Educational video on recognising and responding to hamster seizures."
 )
 
 puts "Seeded #{FirstAidProcedure.count} procedures, #{Step.count} steps, #{InstructionalVideo.count} videos."
+
+# --- VETERINARY CLINICS ---
+VeterinaryClinic.destroy_all
+
+VeterinaryClinic.create!([
+  {
+    name: "Kuching Veterinary Clinic",
+    address: "123 Jalan Padungan, Kuching, Sarawak",
+    latitude: 1.5497,
+    longitude: 110.3592,
+    phone: "+60 82-123456",
+    open_hours: "Mon:08:00-18:00,Tue:08:00-18:00,Wed:08:00-18:00,Thu:08:00-18:00,Fri:08:00-18:00,Sat:09:00-13:00",
+    is_emergency: false,
+    accepted_species: "Dog,Cat,Rabbit,Hamster",
+    last_verified_at: Date.today
+  },
+  {
+    name: "24Hr Pet Emergency Centre",
+    address: "45 Jalan Song, Kuching, Sarawak",
+    latitude: 1.5321,
+    longitude: 110.3712,
+    phone: "+60 82-654321",
+    open_hours: "Mon:00:00-23:59,Tue:00:00-23:59,Wed:00:00-23:59,Thu:00:00-23:59,Fri:00:00-23:59,Sat:00:00-23:59,Sun:00:00-23:59",
+    is_emergency: true,
+    accepted_species: "Dog,Cat",
+    last_verified_at: Date.today
+  }
+])

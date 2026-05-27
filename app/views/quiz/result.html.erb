@@ -1,0 +1,85 @@
+<% content_for :title, "Results — #{@quiz.title}" %>
+
+<%
+  pct = (@score.to_f / @total * 100).round
+  message = if @score == @total then "Perfect score!"
+            elsif pct >= 80 then "Great work!"
+            elsif pct >= 60 then "Good effort!"
+            else "Keep practising!"
+            end
+%>
+
+<div class="py-6 max-w-2xl mx-auto">
+
+  <%# Score banner %>
+  <div class="bg-blue-700 text-white rounded-2xl p-8 text-center mb-8 shadow-md">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <span class="text-2xl"><%= @quiz.icon %></span>
+      <p class="text-blue-200 text-sm font-medium uppercase tracking-wide"><%= @quiz.title %></p>
+    </div>
+    <p class="text-7xl font-bold leading-none mt-3"><%= @score %><span class="text-3xl text-blue-300">/<%= @total %></span></p>
+    <p class="text-blue-200 mt-2 text-sm"><%= pct %>% correct</p>
+    <p class="text-white font-semibold mt-3 text-lg"><%= message %></p>
+  </div>
+
+  <%# Answer breakdown %>
+  <h2 class="text-lg font-semibold text-gray-800 mb-4">Answer Review</h2>
+  <div class="space-y-4 mb-8">
+    <% @details.each_with_index do |detail, i| %>
+      <% q = detail[:question] %>
+      <% options = q[:type] == :true_false ? [ "true", "false" ] : q[:options] %>
+
+      <div class="rounded-xl border-2 p-5 <%= detail[:correct] ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50' %>">
+        <div class="flex items-start gap-3">
+          <span class="text-xl mt-0.5 flex-shrink-0"><%= detail[:correct] ? "✅" : "❌" %></span>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-900 mb-3 text-sm">
+              <span class="text-gray-400 mr-1"><%= i + 1 %>.</span><%= q[:text] %>
+            </p>
+
+            <div class="space-y-1.5">
+              <% options.each do |option| %>
+                <% is_correct_opt = option == q[:correct] %>
+                <% is_user_opt    = option == detail[:user_answer] %>
+                <%
+                  label_class = if is_correct_opt
+                    "bg-green-200 text-green-900 font-medium"
+                  elsif is_user_opt && !detail[:correct]
+                    "bg-red-200 text-red-900"
+                  else
+                    "text-gray-500"
+                  end
+                %>
+                <div class="flex items-center gap-2 text-sm px-3 py-1.5 rounded-md <%= label_class %>">
+                  <span class="w-4 flex-shrink-0">
+                    <% if is_correct_opt %>✓
+                    <% elsif is_user_opt && !detail[:correct] %>✗
+                    <% end %>
+                  </span>
+                  <span class="capitalize"><%= option == "true" ? "True" : option == "false" ? "False" : option %></span>
+                </div>
+              <% end %>
+            </div>
+
+            <% unless detail[:correct] %>
+              <p class="text-xs text-gray-500 mt-2">
+                Correct answer:
+                <strong class="text-green-700">
+                  <%= q[:correct] == "true" ? "True" : q[:correct] == "false" ? "False" : q[:correct] %>
+                </strong>
+              </p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# CTA buttons %>
+  <div class="flex flex-col sm:flex-row gap-3 pb-6">
+    <%= link_to "Try Again", quiz_topic_path(topic: @quiz.topic_key),
+          class: "flex-1 text-center bg-blue-700 hover:bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold transition-colors shadow-sm" %>
+    <%= link_to "Choose Another Topic", quiz_path,
+          class: "flex-1 text-center bg-white hover:bg-gray-50 text-gray-700 py-3 px-6 rounded-xl font-semibold border border-gray-300 transition-colors" %>
+  </div>
+</div>
