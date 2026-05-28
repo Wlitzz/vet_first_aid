@@ -1,149 +1,90 @@
+puts "Cleaning the database..."
 FirstAidProcedure.destroy_all
-
-# --- DOG CHOKING ---
-dog_choke = FirstAidProcedure.create!(
-  name: "Dog Choking",
-  species: "dog",
-  severity: "immediate",
-  description: "A dog that is choking may paw at its mouth, make exaggerated swallowing motions, or become cyanotic (blue gums). Act quickly but calmly. If the dog loses consciousness, begin rescue breathing and contact an emergency vet immediately.",
-  symptom_keywords: "choking, pawing at mouth, blue gums, gagging, difficulty breathing, cyanosis, retching, foreign object"
-)
-
-Step.create!([
-  {
-    first_aid_procedure: dog_choke, position: 1,
-    instruction: "Restrain your dog calmly. Kneel beside or behind them. Open their mouth gently and look inside - if you can clearly see and safely reach the object, carefully sweep it out with one finger. Do NOT perform a blind finger sweep.",
-    checklist: "Object is visible and reachable without pushing it deeper\nDog is not biting down due to panic\nIf unsure or unable to see the object, move to the next step immediately\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: dog_choke, position: 2,
-    instruction: "Perform the modified Heimlich maneuver. For a standing dog: stand or kneel behind the dog, place your hands around the abdomen just below the ribcage, and give 3-5 firm upward-and-forward thrusts. For a small dog: hold them on your lap facing away from you and apply gentle firm thrusts.",
-    checklist: "Thrusts are applied below the ribcage, not on the ribcage\nApplying 3-5 firm but controlled compressions\nDo not apply excessive force on a small dog - this can cause internal injury\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: dog_choke, position: 3,
-    instruction: "After each set of thrusts, check the mouth again. Tilt the dog's head back slightly to open the airway and look for the object. If visible and reachable, carefully remove it. Repeat Heimlich thrusts and checks up to 3 times.",
-    checklist: "Dog is showing signs of breathing improvement (sides moving, panting)\nGums are returning to pink colour from blue\nObject has been dislodged or removed\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: dog_choke, position: 4,
-    instruction: "Even if the obstruction is cleared, take your dog to a vet immediately. Internal bruising or a partial obstruction may not be visible. If the dog has lost consciousness, begin rescue breathing: close the mouth, breathe into the nose every 3 seconds while transporting to the vet.",
-    checklist: "Dog is conscious and breathing on its own\nGums are pink\nDog has been assessed by a vet after the episode\nIf unsure, contact an emergency vet clinic immediately"
-  }
-])
-
-InstructionalVideo.create!(
-  first_aid_procedure: dog_choke,
-  title: "How to Help a Choking Dog - Pet First Aid",
-  url: "https://www.youtube.com/watch?v=NhYwzPJRqsk",
-  description: "Demonstration of the modified Heimlich manoeuvre and choking response for dogs."
-)
-
-# --- CAT BLEEDING WOUND ---
-cat_bleed = FirstAidProcedure.create!(
-  name: "Cat Bleeding Wound",
-  species: "cat",
-  severity: "immediate",
-  description: "Bleeding wounds in cats can result from bites, cuts, or trauma. Control bleeding with direct pressure before transporting to a vet. Severe blood loss is life-threatening - do not delay veterinary care.",
-  symptom_keywords: "bleeding, wound, cut, laceration, blood, bite, trauma, injury, puncture"
-)
-
-steps_cat = Step.create!([
-  {
-    first_aid_procedure: cat_bleed, position: 1,
-    instruction: "Keep yourself safe first - an injured, frightened cat may scratch or bite. Wrap the cat gently in a large towel to restrain it, leaving the wound accessible. Speak calmly and avoid sudden movements.",
-    checklist: "Cat is wrapped securely but not so tightly it cannot breathe\nYou have protective covering (towel or gloves) for your hands\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: cat_bleed, position: 2,
-    instruction: "Apply firm, direct pressure to the wound using a clean cloth, gauze pad, or sanitary pad. Press firmly and hold continuously for at least 3-5 minutes without lifting the cloth. If blood soaks through, add more material on top - do NOT remove the first layer.",
-    checklist: "Pressure is being held continuously without releasing\nBlood is not soaking through rapidly (if it is, press harder)\nWound site is not on the neck or chest (seek emergency vet immediately if so)\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: cat_bleed, position: 3,
-    instruction: "Once bleeding slows or stops, secure the dressing loosely with a bandage or strips of cloth. Do NOT wrap too tightly - you should be able to slide two fingers under the bandage. Check for circulation: the area below the bandage should remain warm.",
-    checklist: "Bandage is secure but not cutting off circulation\nSkin below bandage is warm and not turning blue or cold\nCat is not chewing at the bandage - use an e-collar if available\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: cat_bleed, position: 4,
-    instruction: "Transport to a vet clinic immediately, even if bleeding appears controlled. All wounds carry infection risk and may require sutures, antibiotics, or pain management. Keep the cat warm and calm during transport.",
-    checklist: "Cat is transported in a secure carrier or wrapped in a towel\nWound dressing is in place and not leaking heavily\nVet clinic has been contacted and is expecting you\nIf unsure, contact an emergency vet clinic immediately"
-  }
-])
-
-InstructionalVideo.create!(
-  step: steps_cat[1],
-  title: "How to Stop Bleeding in Cats - Pet First Aid",
-  url: "https://www.youtube.com/watch?v=EfpNKRnWvAM",
-  description: "Demonstration of direct pressure wound care for cats."
-)
-
-# --- RABBIT GI STASIS ---
-rabbit_gi = FirstAidProcedure.create!(
-  name: "Rabbit Not Eating (GI Stasis)",
-  species: "rabbit",
-  severity: "consult_vet_soon",
-  description: "Gastrointestinal (GI) stasis is a common and potentially fatal condition in rabbits where the digestive system slows or stops. A rabbit that stops eating or producing droppings for more than 12 hours requires urgent veterinary attention.",
-  symptom_keywords: "not eating, no droppings, GI stasis, gut stasis, lethargy, hunched posture, grinding teeth, bloated, stomach, digestive"
-)
-
-Step.create!([
-  {
-    first_aid_procedure: rabbit_gi, position: 1,
-    instruction: "Check for droppings in the enclosure. Normal rabbit droppings are round, firm, and plentiful. If droppings are absent, very small, misshapen, or strung together with fur, the gut may be slowing down. Note when the rabbit last ate and when droppings were last seen.",
-    checklist: "Droppings are present in the enclosure (reassuring sign)\nRabbit has eaten hay in the last 6 hours\nRabbit is not showing signs of pain: teeth grinding, hunched posture, reluctance to move\nIf no droppings for 12+ hours, contact a rabbit-savvy vet immediately"
-  },
-  {
-    first_aid_procedure: rabbit_gi, position: 2,
-    instruction: "Encourage gentle movement. Mild exercise (supervised free-roaming) can help stimulate gut motility. Offer fresh hay - timothy hay is preferred - as the primary food source. Do NOT offer treats, pellets, or high-sugar vegetables as substitutes. Ensure the rabbit can reach fresh water easily.",
-    checklist: "Rabbit is moving around, even slowly\nFresh hay has been offered and is accessible\nRabbit is not bloated (abdomen should not feel tight or drum-like)\nIf bloated, do not massage - seek vet immediately\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: rabbit_gi, position: 3,
-    instruction: "Do NOT attempt to administer medication, oil, or home remedies without veterinary guidance - these can be harmful to rabbits. Keep the rabbit warm (18-24 degrees C) as hypothermia worsens GI stasis. Contact a rabbit-savvy vet as soon as possible for proper diagnosis and treatment.",
-    checklist: "Rabbit has been kept warm and in a quiet, low-stress environment\nNo unprescribed medications or oils have been given\nA vet appointment has been booked - do not wait more than 12-24 hours from symptom onset\nIf unsure, contact an emergency vet clinic immediately"
-  }
-])
-
-# --- HAMSTER SEIZURE ---
-hamster_sz = FirstAidProcedure.create!(
-  name: "Hamster Seizure",
-  species: "hamster",
-  severity: "immediate",
-  description: "Seizures in hamsters can be caused by epilepsy, head injury, infection, low blood sugar, or toxic exposure. A seizing hamster may convulse, twitch, fall over, or appear rigid. Do not restrain the hamster during a seizure.",
-  symptom_keywords: "seizure, convulsion, twitching, shaking, falling over, rigid, unresponsive, epilepsy, fit, tremor"
-)
-
-Step.create!([
-  {
-    first_aid_procedure: hamster_sz, position: 1,
-    instruction: "Do NOT restrain or pick up the hamster while it is seizing - this can cause injury to the hamster and yourself. Remove any objects from the enclosure that could cause injury (water bottle, wheel, hides with sharp edges). Pad the area around the hamster with a soft cloth if possible.",
-    checklist: "Hamster has not been picked up during the seizure\nSharp objects have been cleared from the immediate area\nEnvironment is quiet - turn off loud music, reduce bright lights\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: hamster_sz, position: 2,
-    instruction: "Time the seizure. Most brief seizures last under 60 seconds. Note the time it started. If the seizure lasts more than 2 minutes (status epilepticus), this is a medical emergency - contact a vet immediately while keeping the hamster warm and undisturbed.",
-    checklist: "Seizure lasted less than 60 seconds (reassuring)\nHamster is beginning to regain awareness and movement after the seizure\nIf seizure lasted more than 2 minutes, contact a vet immediately\nIf unsure, contact an emergency vet clinic immediately"
-  },
-  {
-    first_aid_procedure: hamster_sz, position: 3,
-    instruction: "After the seizure ends, the hamster may be confused, wobbly, or temporarily unresponsive - this is the post-ictal phase and is normal. Keep the hamster warm (place a heat pad set to low under one half of the enclosure so it can move away if too warm). Offer a tiny amount of diluted honey water on your fingertip to rule out low blood sugar. Contact a vet for a full assessment.",
-    checklist: "Hamster is recovering, moving, and becoming responsive\nHamster is kept warm but can move away from heat source\nNo further seizures have occurred in the last 30 minutes\nVet has been contacted for a follow-up assessment\nIf unsure, contact an emergency vet clinic immediately"
-  }
-])
-
-InstructionalVideo.create!(
-  first_aid_procedure: hamster_sz,
-  title: "Hamster Seizures - What to Do",
-  url: "https://www.youtube.com/watch?v=yD0fHvj3F8E",
-  description: "Educational video on recognising and responding to hamster seizures."
-)
-
-puts "Seeded #{FirstAidProcedure.count} procedures, #{Step.count} steps, #{InstructionalVideo.count} videos."
-
-# --- VETERINARY CLINICS ---
 VeterinaryClinic.destroy_all
 
+species_list = ["dog", "cat", "rabbit", "hamster"]
+
+# The 4 generic emergency templates
+emergencies = [
+  {
+    type: "Choking",
+    severity: "immediate",
+    desc: "The animal is choking on a foreign object. Pawing at mouth, gagging, or difficulty breathing.",
+    keywords: "choking, gagging, breathing, object, block, mouth, cyanosis",
+    steps: [
+      "Restrain the animal calmly to prevent panic.",
+      "Check the mouth for visible obstructions. Do not perform a blind finger sweep.",
+      "If the object is visible and safe to reach, gently remove it.",
+      "Seek emergency veterinary care immediately."
+    ]
+  },
+  {
+    type: "Bleeding Wound",
+    severity: "immediate",
+    desc: "Active bleeding from a cut, bite, or puncture wound. Requires immediate pressure.",
+    keywords: "bleeding, cut, wound, blood, bite, puncture, laceration",
+    steps: [
+      "Ensure your own safety first and restrain the animal gently.",
+      "Apply firm, direct pressure to the wound with a clean cloth for 5 minutes.",
+      "Do not remove the cloth if blood soaks through; add more layers on top.",
+      "Transport to a vet immediately while maintaining pressure."
+    ]
+  },
+  {
+    type: "Suspected Poisoning",
+    severity: "immediate",
+    desc: "Ingestion of toxic plants, chemicals, or human foods. Symptoms include vomiting, drooling, or lethargy.",
+    keywords: "poison, toxic, chemical, vomit, drool, lethargy, ingest",
+    steps: [
+      "Identify the suspected poison and estimate how much was ingested.",
+      "Do NOT induce vomiting unless explicitly instructed by a veterinarian.",
+      "Remove the animal from the source of the toxin.",
+      "Call an emergency vet clinic immediately with the packaging in hand."
+    ]
+  },
+  {
+    type: "Heatstroke",
+    severity: "consult_vet_soon",
+    desc: "Overheating due to hot environments. Symptoms include excessive panting, lethargy, or collapsing.",
+    keywords: "heat, stroke, panting, hot, sun, temperature, lethargy, collapse",
+    steps: [
+      "Move the animal to a cool, shaded, or air-conditioned area immediately.",
+      "Apply cool (NOT ice-cold) water to their paws, belly, and ears.",
+      "Offer cool drinking water, but do not force them to drink.",
+      "Contact a vet for further observation as internal organ damage can occur."
+    ]
+  }
+]
+
+puts "Generating 16 Emergency Procedures..."
+
+# Loop through every animal and every emergency to create 16 database entries
+species_list.each do |species|
+  emergencies.each do |emergency|
+    procedure = FirstAidProcedure.create!(
+      name: "#{species.capitalize} #{emergency[:type]}",
+      species: species,
+      severity: emergency[:severity],
+      description: emergency[:desc],
+      symptom_keywords: emergency[:keywords]
+    )
+
+    # Automatically generate the step-by-step instructions for each procedure
+    emergency[:steps].each_with_index do |instruction, index|
+      Step.create!(
+        first_aid_procedure: procedure,
+        position: index + 1,
+        instruction: instruction,
+        checklist: "Task completed safely."
+      )
+    end
+  end
+end
+
+puts "Successfully seeded #{FirstAidProcedure.count} procedures and #{Step.count} steps."
+
+# Re-seed the veterinary clinics
+puts "Generating Clinics..."
 VeterinaryClinic.create!([
   {
     name: "Kuching Veterinary Clinic",
@@ -151,7 +92,7 @@ VeterinaryClinic.create!([
     latitude: 1.5497,
     longitude: 110.3592,
     phone: "+60 82-123456",
-    open_hours: "Mon:08:00-18:00,Tue:08:00-18:00,Wed:08:00-18:00,Thu:08:00-18:00,Fri:08:00-18:00,Sat:09:00-13:00",
+    open_hours: "Mon-Fri:08:00-18:00,Sat:09:00-13:00",
     is_emergency: false,
     accepted_species: "Dog,Cat,Rabbit,Hamster",
     last_verified_at: Date.today
@@ -162,9 +103,69 @@ VeterinaryClinic.create!([
     latitude: 1.5321,
     longitude: 110.3712,
     phone: "+60 82-654321",
-    open_hours: "Mon:00:00-23:59,Tue:00:00-23:59,Wed:00:00-23:59,Thu:00:00-23:59,Fri:00:00-23:59,Sat:00:00-23:59,Sun:00:00-23:59",
+    open_hours: "Sun-Sat:00:00-23:59",
     is_emergency: true,
     accepted_species: "Dog,Cat",
     last_verified_at: Date.today
   }
 ])
+puts "Database population complete!"
+
+puts "Generating Quizzes and Questions..."
+Quiz.destroy_all
+
+# The Quiz Blueprints
+quiz_blueprints = [
+  { title: "Choking Emergencies", topic_key: "choking", icon: "🦴", type: "Choking" },
+  { title: "Bleeding Control", topic_key: "bleeding", icon: "🩹", type: "Bleeding Wound" },
+  { title: "Toxic Ingestions", topic_key: "poisoning", icon: "☠️", type: "Suspected Poisoning" },
+  { title: "Heatstroke & Hyperthermia", topic_key: "heatstroke", icon: "🔥", type: "Heatstroke" }
+]
+
+# The Question Bank (Fake answers included!)
+question_bank = {
+  "Choking" => {
+    "dog" => { prompt: "If your dog is choking but you cannot see the object, what should you do?", options: ["Perform a blind finger sweep", "Perform the modified Heimlich maneuver", "Pour water down their throat", "Hold them upside down by the tail"], correct: "Perform the modified Heimlich maneuver" },
+    "cat" => { prompt: "Your cat is choking and panicking. What is the safest first step?", options: ["Pry its mouth open immediately", "Restrain it gently with a thick towel", "Offer it a tasty liquid treat", "Tap firmly on its nose"], correct: "Restrain it gently with a thick towel" },
+    "rabbit" => { prompt: "A rabbit is choking. How should you safely examine them?", options: ["Hold them upside down by the ears", "Support their hindquarters and check the mouth", "Compress their delicate ribcage tightly", "Blow forcefully into their nose"], correct: "Support their hindquarters and check the mouth" },
+    "hamster" => { prompt: "Your hamster appears to be choking. What is a common false alarm?", options: ["They are just sleeping with their eyes open", "Their cheek pouches are just completely stuffed with food", "They are hiccuping from drinking too fast", "They are trying to sing"], correct: "Their cheek pouches are just completely stuffed with food" }
+  },
+  "Bleeding Wound" => {
+    "dog" => { prompt: "What is the first step to control severe bleeding on a dog's leg?", options: ["Apply a tight tourniquet immediately", "Apply firm, direct pressure with a clean cloth", "Wash the wound with hydrogen peroxide", "Leave it open to the air to clot"], correct: "Apply firm, direct pressure with a clean cloth" },
+    "cat" => { prompt: "If blood soaks through the first bandage on a cat's wound, what should you do?", options: ["Remove it and start fresh", "Add more layers of bandage on top", "Loosen the bandage to let it breathe", "Apply ice directly to the wound"], correct: "Add more layers of bandage on top" },
+    "rabbit" => { prompt: "Why must you be careful when bandaging a rabbit?", options: ["Their fur is too slippery for tape", "Their skin is extremely delicate and tears easily", "They are allergic to most medical cotton", "They will immediately fall asleep"], correct: "Their skin is extremely delicate and tears easily" },
+    "hamster" => { prompt: "How should you apply pressure to a bleeding hamster?", options: ["With two hands squeezing firmly", "With a single finger using very gentle pressure", "By wrapping them tightly in an elastic bandage", "You should never apply pressure to a hamster"], correct: "With a single finger using very gentle pressure" }
+  },
+  "Suspected Poisoning" => {
+    "dog" => { prompt: "Your dog ate chocolate. Should you induce vomiting at home?", options: ["Yes, immediately using salt water", "Only if explicitly instructed by a veterinarian", "Yes, by sticking a finger down their throat", "No, just let them sleep it off"], correct: "Only if explicitly instructed by a veterinarian" },
+    "cat" => { prompt: "Which of these common household items is highly toxic to cats?", options: ["Cardboard boxes", "Catnip", "Lilies (the flower)", "Cooked chicken"], correct: "Lilies (the flower)" },
+    "rabbit" => { prompt: "If a rabbit ingests a toxic plant, what symptom is a critical emergency?", options: ["Eating more hay than usual", "Gastrointestinal stasis (stopping eating/pooping)", "Sleeping stretched out", "Thumping their hind leg once"], correct: "Gastrointestinal stasis (stopping eating/pooping)" },
+    "hamster" => { prompt: "What human food is surprisingly dangerous for hamsters?", options: ["Unsalted peanuts", "Almonds and apple seeds (contain cyanide traces)", "Plain boiled egg", "A small piece of cucumber"], correct: "Almonds and apple seeds (contain cyanide traces)" }
+  },
+  "Heatstroke" => {
+    "dog" => { prompt: "Which of these is a primary sign of heatstroke in dogs?", options: ["Shivering and seeking blankets", "Excessive drooling, heavy panting, and glazed eyes", "A cold, wet nose", "Increased appetite"], correct: "Excessive drooling, heavy panting, and glazed eyes" },
+    "cat" => { prompt: "Cats rarely pant. If your cat is open-mouth panting on a hot day, what does it mean?", options: ["They are relaxed", "They are trying to smell something", "It is a severe medical emergency", "They are thirsty"], correct: "It is a severe medical emergency" },
+    "rabbit" => { prompt: "How do rabbits regulate their body temperature?", options: ["By sweating through their paws", "By panting like dogs", "Through the large blood vessels in their ears", "By shedding their fur instantly"], correct: "Through the large blood vessels in their ears" },
+    "hamster" => { prompt: "How can you help cool a hot hamster safely?", options: ["Submerge them in an ice bath", "Place them in the freezer for 2 minutes", "Provide a ceramic tile cooled in the fridge for them to lie on", "Point a desk fan directly at them on high speed"], correct: "Provide a ceramic tile cooled in the fridge for them to lie on" }
+  }
+}
+
+# The Generator Loop
+quiz_blueprints.each do |bp|
+  quiz = Quiz.create!(title: bp[:title], description: "Test your knowledge on #{bp[:type]}", icon: bp[:icon], topic_key: bp[:topic_key])
+  
+  ["dog", "cat", "rabbit", "hamster"].each do |species|
+    procedure = FirstAidProcedure.find_by(name: "#{species.capitalize} #{bp[:type]}")
+    data = question_bank[bp[:type]][species]
+    
+    QuizQuestion.create!(
+      quiz: quiz,
+      first_aid_procedure: procedure,
+      prompt: data[:prompt],
+      options: data[:options],
+      correct_answer: data[:correct]
+    )
+  end
+end
+
+puts "Database population complete! Added #{Quiz.count} Quizzes and #{QuizQuestion.count} Questions."

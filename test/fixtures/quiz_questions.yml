@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  prompt: MyString
+  options: 
+  correct_answer: MyString
+  quiz: one
+  first_aid_procedure: one
+
+two:
+  prompt: MyString
+  options: 
+  correct_answer: MyString
+  quiz: two
+  first_aid_procedure: two

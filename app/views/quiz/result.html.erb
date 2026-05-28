@@ -1,7 +1,7 @@
 <% content_for :title, "Results — #{@quiz.title}" %>
 
 <%
-  pct = (@score.to_f / @total * 100).round
+  pct = (@total > 0) ? (@score.to_f / @total * 100).round : 0
   message = if @score == @total then "Perfect score!"
             elsif pct >= 80 then "Great work!"
             elsif pct >= 60 then "Good effort!"
@@ -27,28 +27,28 @@
   <div class="space-y-4 mb-8">
     <% @details.each_with_index do |detail, i| %>
       <% q = detail[:question] %>
-      <% options = q[:type] == :true_false ? [ "true", "false" ] : q[:options] %>
+      <% options = q.options %>
 
       <div class="rounded-xl border-2 p-5 <%= detail[:correct] ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50' %>">
         <div class="flex items-start gap-3">
           <span class="text-xl mt-0.5 flex-shrink-0"><%= detail[:correct] ? "✅" : "❌" %></span>
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-gray-900 mb-3 text-sm">
-              <span class="text-gray-400 mr-1"><%= i + 1 %>.</span><%= q[:text] %>
+              <span class="text-gray-400 mr-1"><%= i + 1 %>.</span><%= q.prompt %>
             </p>
 
             <div class="space-y-1.5">
               <% options.each do |option| %>
-                <% is_correct_opt = option == q[:correct] %>
+                <% is_correct_opt = option == q.correct_answer %>
                 <% is_user_opt    = option == detail[:user_answer] %>
                 <%
                   label_class = if is_correct_opt
-                    "bg-green-200 text-green-900 font-medium"
-                  elsif is_user_opt && !detail[:correct]
-                    "bg-red-200 text-red-900"
-                  else
-                    "text-gray-500"
-                  end
+                                  "bg-green-200 text-green-900 font-medium"
+                                elsif is_user_opt && !detail[:correct]
+                                  "bg-red-200 text-red-900"
+                                else
+                                  "text-gray-500"
+                                end
                 %>
                 <div class="flex items-center gap-2 text-sm px-3 py-1.5 rounded-md <%= label_class %>">
                   <span class="w-4 flex-shrink-0">
@@ -56,7 +56,7 @@
                     <% elsif is_user_opt && !detail[:correct] %>✗
                     <% end %>
                   </span>
-                  <span class="capitalize"><%= option == "true" ? "True" : option == "false" ? "False" : option %></span>
+                  <span class="capitalize"><%= option %></span>
                 </div>
               <% end %>
             </div>
@@ -65,7 +65,7 @@
               <p class="text-xs text-gray-500 mt-2">
                 Correct answer:
                 <strong class="text-green-700">
-                  <%= q[:correct] == "true" ? "True" : q[:correct] == "false" ? "False" : q[:correct] %>
+                  <%= q.correct_answer %>
                 </strong>
               </p>
             <% end %>

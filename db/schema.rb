@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_27_104119) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_28_053254) do
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
@@ -63,6 +63,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_104119) do
     t.index ["pet_owner_id"], name: "index_pets_on_pet_owner_id"
   end
 
+  create_table "quiz_questions", force: :cascade do |t|
+    t.string "correct_answer"
+    t.datetime "created_at", null: false
+    t.integer "first_aid_procedure_id", null: false
+    t.json "options"
+    t.string "prompt"
+    t.integer "quiz_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["first_aid_procedure_id"], name: "index_quiz_questions_on_first_aid_procedure_id"
+    t.index ["quiz_id"], name: "index_quiz_questions_on_quiz_id"
+  end
+
+  create_table "quizzes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "icon"
+    t.string "title"
+    t.string "topic_key"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "steps", force: :cascade do |t|
     t.text "checklist"
     t.datetime "created_at", null: false
@@ -100,5 +121,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_27_104119) do
   add_foreign_key "instructional_videos", "steps"
   add_foreign_key "pet_owners", "accounts"
   add_foreign_key "pets", "pet_owners"
+  add_foreign_key "quiz_questions", "first_aid_procedures"
+  add_foreign_key "quiz_questions", "quizzes"
   add_foreign_key "steps", "first_aid_procedures"
 end

@@ -1,4 +1,5 @@
 class StepsController < ApplicationController
+  skip_before_action :require_login
   def show
     @procedure = FirstAidProcedure.find(params[:first_aid_procedure_id])
     @step = @procedure.steps.find(params[:id])

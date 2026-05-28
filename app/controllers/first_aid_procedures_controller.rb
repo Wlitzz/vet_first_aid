@@ -1,4 +1,5 @@
 class FirstAidProceduresController < ApplicationController
+  skip_before_action :require_login
   def index
     @species = params[:species]
     @query = params[:query]
