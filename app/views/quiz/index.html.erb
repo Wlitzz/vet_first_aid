@@ -1,21 +1,41 @@
 <% content_for :title, "Training Quiz — Vet First Aid" %>
 
-<div class="py-6">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Training Quiz</h1>
-    <p class="mt-2 text-gray-500">Test your veterinary first aid knowledge. Choose a topic to begin.</p>
+<div class="py-8">
+  <div class="mb-10 text-center">
+    <span class="text-5xl">🎓</span>
+    <h1 class="mt-3 text-4xl font-bold text-gray-900">Training Quiz</h1>
+    <p class="mt-2 text-gray-500 max-w-md mx-auto">Test your veterinary first aid knowledge. Choose a topic to begin.</p>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
     <% @quizzes.each do |quiz| %>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col hover:shadow-md transition-shadow">
-        <div class="text-4xl mb-3"><%= quiz.icon %></div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-1"><%= quiz.title %></h2>
-        <p class="text-sm text-gray-500 mb-4 flex-1"><%= quiz.description %></p>
-        <div class="flex items-center justify-between">
-          <span class="text-xs text-gray-400"><%= quiz.quiz_questions.length %> questions</span>
-          <%= link_to "Start Quiz →", quiz_topic_path(topic: quiz.topic_key),
-              class: "bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors" %>
+      <% best  = @best_scores[quiz.topic_key] %>
+      <% total = quiz.quiz_questions.length %>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all flex flex-col">
+        <div class="h-1.5 <%= quiz.difficulty_bar %>"></div>
+
+        <div class="p-6 flex flex-col flex-1">
+          <div class="flex items-start justify-between mb-4">
+            <span class="text-4xl"><%= quiz.icon %></span>
+            <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%= quiz.difficulty_badge %>">
+              <%= quiz.difficulty_label %>
+            </span>
+          </div>
+
+          <h2 class="text-xl font-bold text-gray-900 mb-1"><%= quiz.title %></h2>
+          <p class="text-sm text-gray-500 mb-5 flex-1"><%= quiz.description %></p>
+
+          <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-3 text-sm text-gray-400">
+              <span>📝 <%= total %> questions</span>
+              <% if best %>
+                <span class="text-blue-600 font-semibold">⭐ Best: <%= best %>/<%= total %></span>
+              <% end %>
+            </div>
+            <%= link_to "Start →", quiz_topic_path(topic: quiz.topic_key),
+                class: "bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors" %>
+          </div>
         </div>
       </div>
     <% end %>
