@@ -4,7 +4,8 @@ class FirstAidProcedure < ApplicationRecord
 
   has_many :steps, -> { order(:position) }, dependent: :destroy
   has_many :instructional_videos, dependent: :destroy
-
+  has_one :instructional_video, dependent: :destroy
+  
   validates :name, presence: true
   validates :description, presence: true
   validates :symptom_keywords, presence: true

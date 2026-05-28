@@ -169,3 +169,17 @@ quiz_blueprints.each do |bp|
 end
 
 puts "Database population complete! Added #{Quiz.count} Quizzes and #{QuizQuestion.count} Questions."
+
+puts "Generating Instructional Videos..."
+InstructionalVideo.destroy_all
+
+# Loop through every procedure and attach the standard YouTube link
+FirstAidProcedure.all.each do |procedure|
+  InstructionalVideo.create!(
+    first_aid_procedure: procedure,
+    title: "Emergency Demonstration: #{procedure.name}",
+    url: "https://www.youtube.com/watch?v=cdRUFy7YBYc" # Standard link!
+  )
+end
+
+puts "Database population complete! Added #{InstructionalVideo.count} Videos."
