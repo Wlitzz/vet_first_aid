@@ -1,15 +1,3 @@
-<%# =============================================================================
-  # _clinic_card.html.erb
-  # SWE30003 – Group 17 | Clinic Locator Lead
-  #
-  # Partial rendered for each VeterinaryClinic in the search results list.
-  # Locals expected:
-  #   clinic  – VeterinaryClinic instance
-  #   lat     – Float, user latitude  (may be nil)
-  #   lng     – Float, user longitude (may be nil)
-  # =============================================================================
-  %>
-
 <%
   distance_km  = (lat && lng) ? clinic.distance_to(lat, lng).round(1) : nil
   is_open      = clinic.open_now?
@@ -18,97 +6,75 @@
   today_hours  = clinic.todays_hours
 %>
 
-<article class="clinic-card <%= 'clinic-card--emergency' if is_emergency %> <%= 'clinic-card--closed' unless is_open %>"
-         data-clinic-id="<%= clinic.id %>"
-         data-lat="<%= clinic.latitude %>"
-         data-lng="<%= clinic.longitude %>">
+<div class="bg-white border <%= is_emergency ? 'border-l-4 border-l-red-500 border-gray-200' : 'border-gray-200' %> rounded-xl shadow-sm hover:shadow-md transition-shadow <%= 'opacity-80' unless is_open %>">
 
-  <%# ── Status ribbon ─────────────────────────────────────────────────── %>
-  <div class="clinic-card__ribbon">
+  <%# Status ribbon %>
+  <div class="flex flex-wrap gap-2 px-4 pt-3 pb-2 bg-gray-50 border-b border-gray-100 rounded-t-xl">
     <% if is_emergency %>
-      <span class="badge badge--emergency">
-        <svg class="badge__icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm.75 3.5v4a.75.75 0 0 1-1.5 0v-4a.75.75 0 0 1 1.5 0Zm-.75 6.5a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75Z"/>
-        </svg>
-        24 / 7 Emergency
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide bg-red-100 text-red-700">
+        &#9888; 24/7 Emergency
       </span>
     <% end %>
 
-    <span class="badge <%= is_open ? 'badge--open' : 'badge--closed' %>">
-      <span class="badge__dot"></span>
+    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide <%= is_open ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' %>">
+      <span class="w-2 h-2 rounded-full bg-current <%= is_open ? 'animate-pulse' : '' %>"></span>
       <%= is_open ? "Open Now" : "Closed" %>
     </span>
 
     <% if is_stale %>
-      <span class="badge badge--stale" title="Last verified more than 90 days ago">
+      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide bg-yellow-100 text-yellow-700">
         &#9888; Unverified
       </span>
     <% end %>
   </div>
 
-  <%# ── Main body ─────────────────────────────────────────────────────── %>
-  <div class="clinic-card__body">
-    <div class="clinic-card__info">
+  <%# Main body %>
+  <div class="flex justify-between items-start gap-4 px-4 py-4">
+    <div class="flex-1 min-w-0">
 
-      <h2 class="clinic-card__name">
+      <h2 class="text-lg font-bold text-gray-900 mb-1">
         <%= link_to clinic.name, clinic_path(clinic,
               lat: lat, lng: lng,
               species: params[:species],
               open_now: params[:open_now],
               emergency_24_7: params[:emergency_24_7]),
-              class: "clinic-card__name-link" %>
+              class: "hover:text-blue-600 transition-colors" %>
       </h2>
 
-      <p class="clinic-card__address">
-        <svg class="inline-icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 1a5 5 0 0 0-5 5c0 3.4 4.4 8.4 4.6 8.6a.5.5 0 0 0 .8 0C8.6 14.4 13 9.4 13 6a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/>
-        </svg>
-        <%= clinic.address %>
-      </p>
-
-      <p class="clinic-card__hours">
-        <svg class="inline-icon" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm.5 7.207V4.5a.5.5 0 0 0-1 0v4a.5.5 0 0 0 .146.354l2 2a.5.5 0 0 0 .708-.708L8.5 8.207Z"/>
-        </svg>
-        Today: <strong><%= today_hours %></strong>
-      </p>
+      <p class="text-sm text-gray-500 mb-1">&#128205; <%= clinic.address %></p>
+      <p class="text-sm text-gray-500 mb-2">&#128336; Today: <strong class="text-gray-700"><%= today_hours %></strong></p>
 
       <% if clinic.species_accepted.any? %>
-        <div class="clinic-card__species">
+        <div class="flex flex-wrap gap-1">
           <% clinic.species_accepted.each do |sp| %>
-            <span class="species-tag"><%= sp %></span>
+            <span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold capitalize"><%= sp %></span>
           <% end %>
         </div>
       <% end %>
 
     </div>
 
-    <%# ── Right column: distance + actions ─────────────────────────────── %>
-    <div class="clinic-card__meta">
+    <%# Right: distance + actions %>
+    <div class="flex flex-col items-end gap-3 flex-shrink-0">
       <% if distance_km %>
-        <div class="clinic-card__distance">
-          <span class="distance__value"><%= distance_km %></span>
-          <span class="distance__unit">km</span>
+        <div class="text-right leading-tight">
+          <span class="block text-2xl font-bold text-blue-600"><%= distance_km %></span>
+          <span class="text-xs text-gray-400 uppercase tracking-wide">km</span>
         </div>
       <% end %>
 
-      <div class="clinic-card__actions">
+      <div class="flex gap-1 items-center">
         <% if clinic.phone.present? %>
-          <%= link_to "tel:#{clinic.phone}", class: "btn btn--icon btn--call", title: "Call #{clinic.phone}" do %>
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122L9.82 10.84a1.49 1.49 0 0 1-1.354-.36l-3.062-3.063a1.49 1.49 0 0 1-.36-1.354l.651-2.965a.678.678 0 0 0-.122-.58L3.654 1.328Z"/>
-            </svg>
-            <span>Call</span>
+          <%= link_to "tel:#{clinic.phone}",
+                class: "inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 border border-green-200 text-xs font-semibold hover:bg-green-100 transition-colors" do %>
+            &#128222; Call
           <% end %>
         <% end %>
 
         <%= link_to "https://maps.google.com/?q=#{CGI.escape(clinic.address)}",
               target: "_blank", rel: "noopener noreferrer",
-              class: "btn btn--icon btn--navigate", title: "Open in maps" do %>
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M8 1a5 5 0 0 0-5 5c0 3.4 4.4 8.4 4.6 8.6a.5.5 0 0 0 .8 0C8.6 14.4 13 9.4 13 6a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z"/>
-          </svg>
-          <span>Navigate</span>
+              class: "inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold hover:bg-blue-100 transition-colors" do %>
+          &#128506; Navigate
         <% end %>
 
         <%= link_to clinic_path(clinic,
@@ -116,14 +82,11 @@
               species: params[:species],
               open_now: params[:open_now],
               emergency_24_7: params[:emergency_24_7]),
-              class: "btn btn--details" do %>
-          Details
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708Z"/>
-          </svg>
+              class: "inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-200 text-gray-500 text-xs font-semibold hover:text-gray-900 hover:border-gray-400 transition-colors" do %>
+          Details &rarr;
         <% end %>
       </div>
     </div>
   </div>
 
-</article>
+</div>
